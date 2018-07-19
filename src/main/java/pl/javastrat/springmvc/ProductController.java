@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,17 +51,50 @@ public class ProductController {
         return "sukces.html";
     }
 
-    @GetMapping("/produktySpoz")
-    public String productsSpoz(Model model) {
+//    @GetMapping("/produktySpoz")
+//    public String productsSpoz(Model model) {
+//        List<Product> products = productRepository.getProducts();
+//        List<Product> products2 = new ArrayList<>();
+//        double price=0;
+//        String result;
+//        for (int i = products.size()-1; i >=0; i--) {
+//            if (products.get(i).getCategory().equals("Art.spożywcze")) {
+//                price = price + products.get(i).getPrice();
+//                products2.add(products.get(i));
+//            }
+//        }
+//        result = "Suma cen wynosi " + price;
+//        model.addAttribute("allProducts", products2);
+//        model.addAttribute("wynik", result);
+//        //return
+//        return "produkty";
+//    }
+    @GetMapping("/lista")
+    public String productsList(@RequestParam(value = "kategoria") String category, Model model) {
         List<Product> products = productRepository.getProducts();
         List<Product> products2 = new ArrayList<>();
         double price=0;
-        String result;
+        String result, kat="";
+
+                switch (category) {
+            case "spozywcze":
+                kat = "Art.spożywcze";
+                break;
+            case "domowe":
+                kat = "Art.gosp.domowego";
+                break;
+            case "inne":
+                kat = "Inne";
+                break;
+            case "":
+                kat = "All";
+                break;
+        }
         for (int i = products.size()-1; i >=0; i--) {
-            if (products.get(i).getCategory().equals("Art.spożywcze")) {
+            if (products.get(i).getCategory().equals(kat)) {
                 price = price + products.get(i).getPrice();
                 products2.add(products.get(i));
-            } 
+            }
         }
         result = "Suma cen wynosi " + price;
         model.addAttribute("allProducts", products2);
@@ -71,40 +103,4 @@ public class ProductController {
         return "produkty";
     }
 
-    @GetMapping("/produktyGosp")
-    public String productsGosp(Model model) {
-        List<Product> products = productRepository.getProducts();
-        List<Product> products2 = new ArrayList<>();
-        double price=0;
-        String result;
-        for (int i = products.size()-1; i >=0; i--) {
-            if (products.get(i).getCategory().equals("Art.gosp.domowego")) {
-                products2.add(products.get(i));
-                price = price + products.get(i).getPrice();
-            }
-        }
-        result = "Suma cen wynosi " + price;
-        model.addAttribute("allProducts", products2);
-        model.addAttribute("wynik", result);
-        //return
-        return "produkty";
-    }
-    @GetMapping("/produktyInne")
-    public String productsInne(Model model) {
-        List<Product> products = productRepository.getProducts();
-        List<Product> products2 = new ArrayList<>();
-        double price=0;
-        String result;
-        for (int i = products.size()-1; i >=0; i--) {
-            if (products.get(i).getCategory().equals("Inne")) {
-                products2.add(products.get(i));
-                price = price + products.get(i).getPrice();
-            }
-        }
-        result = "Suma cen wynosi " + price;
-        model.addAttribute("allProducts", products2);
-        model.addAttribute("wynik", result);
-        //return
-        return "produkty";
-    }
 }
