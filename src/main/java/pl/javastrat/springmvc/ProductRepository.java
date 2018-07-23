@@ -12,9 +12,9 @@ public class ProductRepository {
     public ProductRepository() {
         productsTab = new ArrayList<>();
 
-        productsTab.add(new Product ("Mleko", 2.5, ProductCategory.CAT1.getDescription()));
-        productsTab.add(new Product ("Odkurzacz", 250.5, ProductCategory.CAT2.getDescription()));
-        productsTab.add(new Product ("Samochod", 140000.00, ProductCategory.CAT3.getDescription()));
+        productsTab.add(new Product ("Mleko", 2.5, ProductCategory.CAT1));
+        productsTab.add(new Product ("Odkurzacz", 250.5, ProductCategory.CAT2));
+        productsTab.add(new Product ("Samochod", 140000.00, ProductCategory.CAT3));
     }
 
     public List<Product> getProducts() {

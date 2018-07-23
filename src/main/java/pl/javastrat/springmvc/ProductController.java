@@ -23,24 +23,10 @@ public class ProductController {
         return "index.html";
     }
 
-    @GetMapping("/produkty")
-    public String home(Model model) {
-        List<Product> products = productRepository.getProducts();
-        double price=0;
-        String result;
-        for (int i = products.size()-1; i >=0; i--) {
-            price = price + products.get(i).getPrice();
-        }
-        result = "Suma cen wynosi " + price;
-        model.addAttribute("allProducts", products);
-        model.addAttribute("wynik", result);
-        return "produkty";
-    }
-
     @RequestMapping("/add")
-    public String addUser(@RequestParam(value = "nazwa") String nazwa, @RequestParam(value = "cena") double cena, @RequestParam(value = "kategoria") String kategoria) {
+    public String addUser(@RequestParam(value = "nazwa", defaultValue = "Jogurt") String nazwa , @RequestParam(value = "cena", defaultValue = "2.5") double cena, @RequestParam(value = "kategoria", defaultValue = "CAT1") String kategoria) {
 
-        Product product = new Product(nazwa, cena, kategoria);
+        Product product = new Product(nazwa, cena, ProductCategory.valueOf(kategoria));
         productRepository.addProduct(product);
 
         return "redirect:/sukces";
@@ -70,36 +56,40 @@ public class ProductController {
 //        return "produkty";
 //    }
     @GetMapping("/lista")
-    public String productsList(@RequestParam(value = "kategoria") String category, Model model) {
+    public String productsList(@RequestParam(required = false, value = "kategoria") String category, Model model) {
         List<Product> products = productRepository.getProducts();
         List<Product> products2 = new ArrayList<>();
         double price=0;
         String result, kat="";
 
-                switch (category) {
-            case "spozywcze":
-                kat = "Art.spożywcze";
-                break;
-            case "domowe":
-                kat = "Art.gosp.domowego";
-                break;
-            case "inne":
-                kat = "Inne";
-                break;
-            case "":
-                kat = "All";
-                break;
-        }
-        for (int i = products.size()-1; i >=0; i--) {
-            if (products.get(i).getCategory().equals(kat)) {
-                price = price + products.get(i).getPrice();
-                products2.add(products.get(i));
+        if(category == null) {
+            for (Product product : products) {
+                products2.add(product);
+                price = price+product.getPrice();
+            }
+        } else{
+            switch (category) {
+                case "spozywcze":
+                    kat = "Art.spożywcze";
+                    break;
+                case "domowe":
+                    kat = "Art.gosp.domowego";
+                    break;
+                case "inne":
+                    kat = "Inne";
+                    break;
+            }
+
+            for (Product product : products) {
+                if (product.getCategory().getDescription().equals(kat)){
+                    price = price+product.getPrice();
+                    products2.add(product);
+                }
             }
         }
         result = "Suma cen wynosi " + price;
         model.addAttribute("allProducts", products2);
         model.addAttribute("wynik", result);
-        //return
         return "produkty";
     }
 

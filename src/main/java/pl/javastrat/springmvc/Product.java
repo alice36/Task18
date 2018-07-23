@@ -3,9 +3,9 @@ package pl.javastrat.springmvc;
 public class Product {
     private String name;
     private double price;
-    private String category;
+    private ProductCategory category;
 
-    public Product(String name, double price, String category) {
+    public Product(String name, double price, ProductCategory category) {
         this.name = name;
         this.price = price;
         this.category = category;
@@ -30,7 +30,7 @@ public class Product {
         this.price = price;
     }
 
-    public String getCategory() {
+    public ProductCategory getCategory() {
         return category;
     }
 
